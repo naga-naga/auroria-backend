@@ -12,3 +12,6 @@ Style/Documentation:
 
 Style/SymbolArray:
   EnforcedStyle: brackets
+
+Style/TrailingCommaInHashLiteral:
+  EnforcedStyleForMultiline: diff_comma
