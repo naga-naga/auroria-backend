@@ -3,6 +3,15 @@
 require 'rails_helper'
 
 RSpec.describe TodoItem do
+  describe 'todo_list の関連付けについて' do
+    it 'TodoItem から辿れる' do
+      todo_list = TodoList.create!(title: 'title')
+      todo_item = todo_list.todo_items.create!(detail: 'foo', status: :incomplete)
+
+      expect(described_class.find(todo_item.id).todo_list).to eq(TodoList.find(todo_list.id))
+    end
+  end
+
   describe 'status について' do
     it 'status が incomplete の場合 valid' do
       todo_item = described_class.build(detail: 'foo', status: :incomplete)
