@@ -71,4 +71,8 @@ RSpec.configure do |config|
   config.filter_rails_from_backtrace!
   # arbitrary gems may also be filtered via:
   # config.filter_gems_from_backtrace("gem name")
+
+  # FactoryBot.create を create と書ける
+  # @see: https://docs.rubocop.org/rubocop-factory_bot/cops_factorybot.html#factorybotsyntaxmethods
+  config.include FactoryBot::Syntax::Methods
 end
