@@ -7,8 +7,14 @@ plugins:
 AllCops:
   NewCops: enable
 
+RSpec/ContextWording:
+  Enabled: false
+
 RSpec/DescribedClass:
   EnforcedStyle: explicit
+
+RSpec/ExampleLength:
+  CountAsOne: ['array', 'hash', 'heredoc', 'method_call']
 
 Style/Documentation:
   Enabled: false
