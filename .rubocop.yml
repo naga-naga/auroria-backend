@@ -7,6 +7,9 @@ plugins:
 AllCops:
   NewCops: enable
 
+RSpec/ContextWording:
+  Enabled: false
+
 RSpec/DescribedClass:
   EnforcedStyle: explicit
 
