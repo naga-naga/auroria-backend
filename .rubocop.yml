@@ -13,6 +13,9 @@ RSpec/ContextWording:
 RSpec/DescribedClass:
   EnforcedStyle: explicit
 
+RSpec/ExampleLength:
+  CountAsOne: ['array', 'hash', 'heredoc', 'method_call']
+
 Style/Documentation:
   Enabled: false
 
