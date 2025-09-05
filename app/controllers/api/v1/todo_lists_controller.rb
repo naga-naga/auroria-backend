@@ -3,8 +3,14 @@
 module Api
   module V1
     class TodoListsController < ApplicationController
+      DEFAULT_LIMIT = 30
+      DEFAULT_OFFSET = 0
+
       def index
-        render json: TodoList.all
+        limit = params.fetch(:limit, DEFAULT_LIMIT)
+        offset = params.fetch(:offset, DEFAULT_OFFSET)
+
+        render json: TodoList.limit(limit).offset(offset)
       end
 
       def show
