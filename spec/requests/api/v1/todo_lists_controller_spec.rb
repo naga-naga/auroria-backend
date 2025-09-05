@@ -15,7 +15,7 @@ RSpec.describe Api::V1::TodoListsController do
         expect(response).to have_http_status(:ok)
       end
 
-      context 'limit と offset が渡された場合' do
+      context 'limit と offset が整数で渡された場合' do
         let!(:params) { { limit: 1, offset: 1 } }
 
         it '渡された limit/offset が使われる' do
@@ -30,7 +30,7 @@ RSpec.describe Api::V1::TodoListsController do
         end
       end
 
-      context 'limit のみ渡された場合' do
+      context 'limit のみ整数で渡された場合' do
         before do
           stub_const('Api::V1::TodoListsController::DEFAULT_OFFSET', 0)
         end
@@ -49,7 +49,7 @@ RSpec.describe Api::V1::TodoListsController do
         end
       end
 
-      context 'offset のみ渡された場合' do
+      context 'offset のみ整数で渡された場合' do
         before do
           stub_const('Api::V1::TodoListsController::DEFAULT_LIMIT', 1)
         end
@@ -91,6 +91,105 @@ RSpec.describe Api::V1::TodoListsController do
             a_hash_including(
               id: todo_list3.id,
               title: todo_list3.title
+            )
+          )
+        end
+      end
+
+      context '渡された limit が大きすぎる場合' do
+        before do
+          stub_const('Api::V1::TodoListsController::MAX_LIMIT', 2)
+          stub_const('Api::V1::TodoListsController::DEFAULT_OFFSET', 0)
+        end
+
+        let!(:params) { { limit: 1_000_000 } }
+
+        it '最大値までしか返らない' do
+          get('/api/v1/todo_lists', params:)
+
+          expect(JSON.parse(response.body, symbolize_names: true)).to contain_exactly(
+            a_hash_including(
+              id: todo_list1.id,
+              title: todo_list1.title
+            ),
+            a_hash_including(
+              id: todo_list2.id,
+              title: todo_list2.title
+            )
+          )
+        end
+      end
+
+      context '渡された limit が負の整数の場合' do
+        before do
+          stub_const('Api::V1::TodoListsController::DEFAULT_LIMIT', 10)
+          stub_const('Api::V1::TodoListsController::DEFAULT_OFFSET', 0)
+        end
+
+        let!(:params) { { limit: -1 } }
+
+        it 'limit が0に丸められる' do
+          get('/api/v1/todo_lists', params:)
+
+          expect(JSON.parse(response.body, symbolize_names: true)).to be_empty
+        end
+      end
+
+      context '渡された offset が負の整数の場合' do
+        before do
+          stub_const('Api::V1::TodoListsController::DEFAULT_LIMIT', 1)
+          stub_const('Api::V1::TodoListsController::DEFAULT_OFFSET', 10)
+        end
+
+        let!(:params) { { offset: -1 } }
+
+        it 'offset が0に丸められる' do
+          get('/api/v1/todo_lists', params:)
+
+          expect(JSON.parse(response.body, symbolize_names: true)).to contain_exactly(
+            a_hash_including(
+              id: todo_list1.id,
+              title: todo_list1.title
+            )
+          )
+        end
+      end
+
+      context '渡された limit が整数でない場合' do
+        before do
+          stub_const('Api::V1::TodoListsController::DEFAULT_LIMIT', 1)
+          stub_const('Api::V1::TodoListsController::DEFAULT_OFFSET', 0)
+        end
+
+        let!(:params) { { limit: 'string' } }
+
+        it 'デフォルトの limit が使われる' do
+          get('/api/v1/todo_lists', params:)
+
+          expect(JSON.parse(response.body, symbolize_names: true)).to contain_exactly(
+            a_hash_including(
+              id: todo_list1.id,
+              title: todo_list1.title
+            )
+          )
+        end
+      end
+
+      context '渡された offset が整数でない場合' do
+        before do
+          stub_const('Api::V1::TodoListsController::DEFAULT_LIMIT', 1)
+          stub_const('Api::V1::TodoListsController::DEFAULT_OFFSET', 0)
+        end
+
+        let!(:params) { { offset: 'string' } }
+
+        it 'デフォルトの offset が使われる' do
+          get('/api/v1/todo_lists', params:)
+
+          expect(JSON.parse(response.body, symbolize_names: true)).to contain_exactly(
+            a_hash_including(
+              id: todo_list1.id,
+              title: todo_list1.title
             )
           )
         end
