@@ -16,6 +16,9 @@ RSpec/DescribedClass:
 RSpec/ExampleLength:
   CountAsOne: ['array', 'hash', 'heredoc', 'method_call']
 
+RSpec/IndexedLet:
+  Enabled: false
+
 Style/Documentation:
   Enabled: false
 

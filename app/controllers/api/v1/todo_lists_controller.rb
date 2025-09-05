@@ -3,6 +3,10 @@
 module Api
   module V1
     class TodoListsController < ApplicationController
+      def index
+        render json: TodoList.all
+      end
+
       def show
         todo_list = TodoList.find(params[:id])
 
